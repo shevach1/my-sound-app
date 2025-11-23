@@ -1,1 +1,4 @@
-openai requests pydub python-dotenv streamlit watchdog
+openai
+requests
+pydub
+streamlit

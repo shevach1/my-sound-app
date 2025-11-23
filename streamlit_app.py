@@ -131,20 +131,34 @@ if uploaded_file and openai_key and eleven_key:
                 timestamp_ms = int(effect['timestamp'] * 1000)
                 sfx_layer = sfx_layer.overlay(sfx_clip, position=timestamp_ms)
         
-        # 4. Final Output
+        # 4. Final Output Processing
         final_mix = sfx_layer.overlay(base_audio, position=0)
         
-        # Buffer for download
+        # Buffer for Full Mix
         buffer_mix = BytesIO()
         final_mix.export(buffer_mix, format="mp3")
         
-        st.header("🎧 Results")
-        st.audio(buffer_mix, format='audio/mp3')
+        # Buffer for SFX Layer Only (Transparent)
+        buffer_sfx = BytesIO()
+        sfx_layer.export(buffer_sfx, format="mp3")
         
+        st.header("🎧 Results")
+        
+        st.subheader("1. Full Preview (Voice + SFX)")
+        st.audio(buffer_mix, format='audio/mp3')
         st.download_button(
-            label="Download Final Mix",
+            label="Download Full Mix",
             data=buffer_mix.getvalue(),
             file_name="auto_sfx_mix.mp3",
+            mime="audio/mp3"
+        )
+        
+        st.subheader("2. Editor Track (SFX Only)")
+        st.info("Drag this file into your video editor. It has silence built-in so it syncs perfectly.")
+        st.download_button(
+            label="Download SFX Layer Only",
+            data=buffer_sfx.getvalue(),
+            file_name="sfx_layer_only.mp3",
             mime="audio/mp3"
         )
 

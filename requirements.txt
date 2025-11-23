@@ -1,0 +1,1 @@
+openai requests pydub python-dotenv streamlit watchdog
